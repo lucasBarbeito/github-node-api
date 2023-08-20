@@ -14,7 +14,8 @@ router.get("/", async (req, res, next) => {
     const nextPageLink = githubResponse.headers.link;
     res.status(200).json({
       users: users,
-      nextPageLink: nextPageLink,
+      // This returns the since number
+      nextPageLink: getSinceNumber(nextPageLink),
     });
   } catch (error) {
     console.error("Error fetching GitHub users:", error);
@@ -61,5 +62,13 @@ router.get("/:username/repos", async (req, res, next) => {
     });
   }
 });
+
+const getSinceNumber = (url) => {
+  const regex = /since=\d+/;
+  const match = url.match(regex);
+  const since = match[0].replace("since=", "");
+  return since;
+
+}
 
 module.exports = router;
